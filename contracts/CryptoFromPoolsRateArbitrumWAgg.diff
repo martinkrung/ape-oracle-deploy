@@ -1,0 +1,85 @@
+1c1
+< # @version 0.3.10
+---
+> # @version 0.4.0
+45c45
+< RATE_MAX_SPEED: constant(uint256) = 10**16 / 60  # Max speed of Rate change
+---
+> RATE_MAX_SPEED: constant(uint256) = 10**16 // 60  # Max speed of Rate change
+53,54c53
+< 
+< @external
+---
+> @deploy
+67c66
+<     for i in range(MAX_POOLS):
+---
+>     for i: uint256 in range(MAX_POOLS):
+75c74
+<         for j in range(MAX_COINS + 1):
+---
+>         for j: uint256 in range(MAX_COINS + 1):
+80c79
+<                 _abi_encode(j, method_id=method_id("coins(uint256)")),
+---
+>                 abi_encode(j, method_id=method_id("coins(uint256)")),
+99c98
+<                 _abi_encode(empty(uint256), method_id=method_id("price_oracle(uint256)")),
+---
+>                 abi_encode(empty(uint256), method_id=method_id("price_oracle(uint256)")),
+112c111
+<             stored_rates = _abi_decode(res, DynArray[uint256, MAX_COINS])
+---
+>             stored_rates = abi_decode(res, DynArray[uint256, MAX_COINS])
+115c114
+<         for r in stored_rates:
+---
+>         for r: uint256 in stored_rates:
+135c134
+<     for i in range(MAX_POOLS):
+---
+>     for i: uint256 in range(MAX_POOLS):
+140,141c139,140
+<             rates: DynArray[uint256, MAX_COINS] = POOLS[i].stored_rates()
+<             rate = rate * rates[COLLATERAL_IX[i]] / rates[BORROWED_IX[i]]
+---
+>             rates: DynArray[uint256, MAX_COINS] = staticcall POOLS[i].stored_rates()
+>             rate = rate * rates[COLLATERAL_IX[i]] // rates[BORROWED_IX[i]]
+161c160
+<         return min(rate, cached_rate * (10**18 + RATE_MAX_SPEED * (block.timestamp - self.cached_timestamp)) / 10**18), use_rates
+---
+>         return min(rate, cached_rate * (10**18 + RATE_MAX_SPEED * (block.timestamp - self.cached_timestamp)) // 10**18), use_rates
+164c163
+<         return max(rate, cached_rate * (10**18 - min(RATE_MAX_SPEED * (block.timestamp - self.cached_timestamp), 10**18)) / 10**18), use_rates
+---
+>         return max(rate, cached_rate * (10**18 - min(RATE_MAX_SPEED * (block.timestamp - self.cached_timestamp), 10**18)) // 10**18), use_rates
+188c187
+<     cl_answer: ChainlinkAnswer = ChainlinkOracle(CHAINLINK_UPTIME_FEED).latestRoundData()
+---
+>     cl_answer: ChainlinkAnswer = staticcall ChainlinkOracle(CHAINLINK_UPTIME_FEED).latestRoundData()
+193c192
+<     for i in range(MAX_POOLS):
+---
+>     for i: uint256 in range(MAX_POOLS):
+200c199
+<             p: uint256 = POOLS[i].price_oracle()
+---
+>             p: uint256 = staticcall POOLS[i].price_oracle()
+208c207
+<                 p_borrowed = POOLS[i].price_oracle(unsafe_sub(BORROWED_IX[i], 1))
+---
+>                 p_borrowed = staticcall POOLS[i].price_oracle(unsafe_sub(BORROWED_IX[i], 1))
+210,211c209,210
+<                 p_collateral = POOLS[i].price_oracle(unsafe_sub(COLLATERAL_IX[i], 1))
+<         _price = _price * p_collateral / p_borrowed
+---
+>                 p_collateral = staticcall POOLS[i].price_oracle(unsafe_sub(COLLATERAL_IX[i], 1))
+>         _price = _price * p_collateral // p_borrowed
+218c217
+<     return self._unscaled_price() * self._stored_rate()[0] / 10**18 * AGG.price() / 10**18
+---
+>     return self._unscaled_price() * self._stored_rate()[0] // 10**18 * staticcall AGG.price() // 10**18
+223c222
+<     return self._unscaled_price() * self._stored_rate_w() / 10**18 * AGG.price_w() / 10**18
+---
+>     return self._unscaled_price() * self._stored_rate_w() // 10**18 * extcall AGG.price_w() // 10**18

@@ -1,7 +1,8 @@
 arbitrum:mainnet:
-  placeholder-1: 
-    name: 
-    date: 2024-06-14
+  CryptoFromPoolsRateArbitrumWAgg-1: 
+    name: CryptoFromPoolsRateArbitrumWAgg
+    date: 2024-09-11
     PlaceHolder:
-      address: 0xa7808B10367E6a88a8334a51De9bfE5aF4C0B7D5
-      explorer: https://arbiscan.io/address/0xa7808B10367E6a88a8334a51De9bfE5aF4C0B7D5#code
+      address: 0xa27d6c7c66e3850ca213379ddcebd4382fc93c81
+      explorer: https://arbiscan.io/address/0xa27d6c7c66e3850ca213379ddcebd4382fc93c81#readContract
+      vyper: 0.4.0
