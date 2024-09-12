@@ -9,7 +9,7 @@ arbitrum:mainnet:
   PriceFeed-tBTC2crvUSD-1: 
     name: CryptoFromPoolsRateArbitrumWAggSimple
     date: 2024-09-12
-    CryptoFromPoolsRateArbitrumWAggSimple:
+    CryptoFromPoolsWAgg:
     init:
       pools: ["0x186cF879186986A20aADFb7eAD50e3C20cb26CeC","0x82670f35306253222F8a165869B28c64739ac62e"]
       borrowed_ixs: [0, 0]

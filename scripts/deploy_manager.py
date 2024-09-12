@@ -29,7 +29,7 @@ def deploy(network, provider, account):
     collateral_ixs = [1, 1]
     agg = "0x44a4FdFb626Ce98e36396d491833606309520330"
 
-    deploy = account.deploy(project.CryptoFromPoolsRateArbitrumWAggSimple, pools, borrowed_ixs, collateral_ixs, agg,  max_priority_fee="1000 wei", max_fee="0.1 gwei", gas_limit="6000000")
+    deploy = account.deploy(project.CryptoFromPoolsWAgg, pools, borrowed_ixs, collateral_ixs, agg,  max_priority_fee="1000 wei", max_fee="0.1 gwei", gas_limit="6000000")
 
 cli.add_command(info)
 cli.add_command(deploy)
