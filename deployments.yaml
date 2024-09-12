@@ -2,7 +2,22 @@ arbitrum:mainnet:
   CryptoFromPoolsRateArbitrumWAgg-1: 
     name: CryptoFromPoolsRateArbitrumWAgg
     date: 2024-09-11
-    PlaceHolder:
+    CryptoFromPoolsRateArbitrumWAgg:
       address: 0xa27d6c7c66e3850ca213379ddcebd4382fc93c81
       explorer: https://arbiscan.io/address/0xa27d6c7c66e3850ca213379ddcebd4382fc93c81#readContract
       vyper: 0.4.0
+  PriceFeed-tBTC2crvUSD-1: 
+    name: CryptoFromPoolsRateArbitrumWAggSimple
+    date: 2024-09-12
+    CryptoFromPoolsRateArbitrumWAggSimple:
+    init:
+      pools: ["0x186cF879186986A20aADFb7eAD50e3C20cb26CeC","0x82670f35306253222F8a165869B28c64739ac62e"]
+      borrowed_ixs: [0, 0]
+      collateral_ixs: [1, 1]
+      agg: "0x44a4FdFb626Ce98e36396d491833606309520330"
+    address: 0x610D8284c0A8B5ecDe7Aaf36092B9Ac6c31477C9
+    explorer: https://arbiscan.io/address/0x610D8284c0A8B5ecDe7Aaf36092B9Ac6c31477C9#readContract
+    vyper: 0.4.0
+
+
+   
