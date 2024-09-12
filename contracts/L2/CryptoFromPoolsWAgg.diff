@@ -1,0 +1,86 @@
+42d41
+< USE_RATES: public(immutable(DynArray[bool, MAX_POOLS]))
+50,52d48
+< cached_timestamp: public(uint256)
+< cached_rate: public(uint256)
+< 
+63d58
+<     use_rates: DynArray[bool, MAX_POOLS] = empty(DynArray[bool, MAX_POOLS])
+107,118d101
+<         res: Bytes[1024] = empty(Bytes[1024])
+<         success, res = raw_call(pools[i].address, method_id("stored_rates()"), max_outsize=1024, is_static_call=True, revert_on_failure=False)
+<         stored_rates: DynArray[uint256, MAX_COINS] = empty(DynArray[uint256, MAX_COINS])
+<         if success and len(res) > 0:
+<             stored_rates = abi_decode(res, DynArray[uint256, MAX_COINS])
+< 
+<         u: bool = False
+<         for r: uint256 in stored_rates:
+<             if r != 10**18:
+<                 u = True
+<         use_rates.append(u)
+< 
+125,180d107
+<     USE_RATES = use_rates
+< 
+< 
+< @internal
+< @view
+< def _raw_stored_rate() -> (uint256, bool):
+<     rate: uint256 = 10**18
+<     use_rates: bool = False
+< 
+<     for i: uint256 in range(MAX_POOLS):
+<         if i == POOL_COUNT:
+<             break
+<         if USE_RATES[i]:
+<             use_rates = True
+<             rates: DynArray[uint256, MAX_COINS] = staticcall POOLS[i].stored_rates()
+<             rate = rate * rates[COLLATERAL_IX[i]] // rates[BORROWED_IX[i]]
+< 
+<     return rate, use_rates
+< 
+< 
+< @internal
+< @view
+< def _stored_rate() -> (uint256, bool):
+<     use_rates: bool = False
+<     rate: uint256 = 0
+<     rate, use_rates = self._raw_stored_rate()
+<     if not use_rates:
+<         return rate, use_rates
+< 
+<     cached_rate: uint256 = self.cached_rate
+< 
+<     if cached_rate == 0 or cached_rate == rate:
+<         return rate, use_rates
+< 
+<     if rate > cached_rate:
+<         return min(rate, cached_rate * (10**18 + RATE_MAX_SPEED * (block.timestamp - self.cached_timestamp)) // 10**18), use_rates
+< 
+<     else:
+<         return max(rate, cached_rate * (10**18 - min(RATE_MAX_SPEED * (block.timestamp - self.cached_timestamp), 10**18)) // 10**18), use_rates
+< 
+< 
+< @external
+< @view
+< def stored_rate() -> uint256:
+<     return self._stored_rate()[0]
+< 
+< 
+< @internal
+< def _stored_rate_w() -> uint256:
+<     rate: uint256 = 0
+<     use_rates: bool = False
+<     rate, use_rates = self._stored_rate()
+<     if use_rates:
+<         self.cached_rate = rate
+<         self.cached_timestamp = block.timestamp
+<     return rate
+217c144
+<     return self._unscaled_price() * self._stored_rate()[0] // 10**18 * staticcall AGG.price() // 10**18
+---
+>     return self._unscaled_price() * staticcall AGG.price() // 10**18
+222c149
+<     return self._unscaled_price() * self._stored_rate_w() // 10**18 * extcall AGG.price_w() // 10**18
+---
+>     return self._unscaled_price() * extcall AGG.price_w() // 10**18
